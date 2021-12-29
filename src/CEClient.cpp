@@ -33,13 +33,13 @@ int CEClient::getLogicalAddress() {
 
 // enable-disable promiscuous mode
 void CEClient::setPromiscuous(bool promiscuous) {
-
+    DbgPrint("setPromiscuous\n");
     Promiscuous = promiscuous;
 }
 
 // enable-disable monitor mode
 void CEClient::setMonitorMode(bool monitorMode) {
-
+    DbgPrint("setMonitorMode\n");
     MonitorMode = monitorMode;
 }
 
@@ -85,11 +85,14 @@ void CEClient::OnReceive(int source, int dest, unsigned char* buffer, int count)
     if (!MonitorMode && dest == _logicalAddress && count == 1 && buffer[0] == 0x83) {
       unsigned char buffer[4];
       buffer[0] = 0x84;
-      buffer[1] = _physicalAddress >> 8;
-      buffer[2] = _physicalAddress;
+    //   buffer[1] = _physicalAddress >> 8;
+    //   buffer[2] = _physicalAddress;
+    //   buffer[3] = _deviceType;
+      buffer[1] = 0x40;
+      buffer[2] = 0x00;
       buffer[3] = _deviceType;
       TransmitFrame(0xF, buffer, 4);
-    }  
+    }  //5F:84:40:00:05
 }
 
 // OnReady redefinition, to save the current status

@@ -5,6 +5,9 @@
 # define STM32
 # define CEC_HIGH 1
 # define CEC_LOW 0
+#elif defined(ESP8266)
+# define CEC_HIGH HIGH
+# define CEC_LOW LOW
 #else
 # define CEC_HIGH LOW
 # define CEC_LOW HIGH
@@ -24,7 +27,11 @@ void CEC_Device::Initialize(CEC_DEVICE_TYPE type)
 #ifdef STM32
   gpio_set_mode(digitalPinToPort(_in_line), PIN_MAP[_in_line].gpio_bit, GPIO_OUTPUT_OD); // set open drain output
   _out_line = _in_line;
+#elif defined(ESP8266)
+  pinMode(_out_line, OUTPUT_OPEN_DRAIN);
+  pinMode( _in_line,  INPUT);
 #else
+#error FAIL
   pinMode(_out_line, OUTPUT);
   pinMode( _in_line,  INPUT);
 #endif  
